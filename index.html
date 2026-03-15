@@ -5,14 +5,20 @@
 <title>Вавилонская библиотека — Радомир Шамсиев</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark">
 <h1>Вавилонская библиотека — проект Радомира Шамсиева</h1>
 <div class="controls">
     <input type="text" id="query" placeholder="Введите строку для поиска">
     <button id="searchBtn">Поиск</button>
     <button id="randomBtn">Случайная книга</button>
+    <button id="prevBtn">⬅ Предыдущая</button>
+    <button id="nextBtn">Следующая ➡</button>
+    <span id="pageNumber"></span>
+    <button id="themeToggle">Светлая тема</button>
 </div>
-<div id="bookContent"></div>
+<div id="bookContainer">
+    <div id="bookContent"></div>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
