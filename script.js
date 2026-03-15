@@ -1,7 +1,14 @@
 const chars = "abcdefghijklmnopqrstuvwxyz .,!?";
-function generatePage(seed, length = 3200) {
+const pageLength = 10000;
+
+let currentSeed = 0;
+let currentPage = 0;
+let direction = 0;
+
+function generatePage(seed, pageNumber = 0) {
     let text = "";
-    for (let i = 0; i < length; i++) {
+    const start = pageNumber * pageLength;
+    for (let i = start; i < start + pageLength; i++) {
         let index = Math.floor(Math.abs(Math.sin(seed + i)) * chars.length);
         text += chars[index];
     }
@@ -15,16 +22,52 @@ function hashCode(str) {
     }
     return Math.abs(hash);
 }
-function showPage(text) {
-    document.getElementById("bookContent").innerText = text;
+function showCurrentPage(anim = false) {
+    const book = document.getElementById("bookContent");
+    const text = generatePage(currentSeed, currentPage);
+
+    if(anim) {
+        book.style.transform = `translateX(${direction*100}%)`;
+        setTimeout(() => {
+            book.innerText = text;
+            book.style.transition = 'none';
+            book.style.transform = `translateX(${-direction*100}%)`;
+            setTimeout(() => {
+                book.style.transition = 'transform 0.5s ease';
+                book.style.transform = 'translateX(0)';
+            }, 10);
+        }, 500);
+    } else {
+        book.innerText = text;
+    }
+    document.getElementById("pageNumber").innerText = `Страница ${currentPage + 1}`;
 }
 document.getElementById("searchBtn").onclick = () => {
     const query = document.getElementById("query").value;
     if(query) {
-        showPage(generatePage(hashCode(query)));
+        currentSeed = hashCode(query);
+        currentPage = 0;
+        showCurrentPage();
     }
 };
 document.getElementById("randomBtn").onclick = () => {
-    const randomSeed = Math.floor(Math.random() * 1000000);
-    showPage(generatePage(randomSeed));
+    currentSeed = Math.floor(Math.random() * 1000000);
+    currentPage = 0;
+    showCurrentPage();
+};
+document.getElementById("prevBtn").onclick = () => {
+    if(currentPage > 0) {
+        direction = -1;
+        currentPage--;
+        showCurrentPage(true);
+    }
+};
+document.getElementById("nextBtn").onclick = () => {
+    direction = 1;
+    currentPage++;
+    showCurrentPage(true);
+};
+document.getElementById("themeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+    document.body.classList.toggle("dark");
 };
